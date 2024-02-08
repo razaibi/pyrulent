@@ -8,13 +8,12 @@ long_description = (this_directory / "README.md").read_text()
 
 setup(
     name='rulent',
-    version='0.0.1',
+    version='0.0.2',
     author='Raza Balbale',
     packages=find_packages(),
     description='A declarative rules engine.',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    author_email='ribalbale@gmail.com',
     url='https://github.com/razaibi/pyrulent',
     project_urls={
         'Documentation': 'https://github.com/razaibi/pyrulent/README.md',

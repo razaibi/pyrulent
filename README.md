@@ -2,6 +2,49 @@
 
 Rulent is a python in-memory latency events engine that uses a set of declarative rules and triggers actions (outcomes).
 
+### Quick Start 
+
+Here is a sample implementation using **rulent** with FastAPI:
+
+```python
+from fastapi import FastAPI
+from .import models
+import rulent
+
+app = FastAPI()
+rulent.load_rules()
+
+@app.post("/validate")
+async def validate(request: models.EventRequest):
+    print(request)
+    return rulent.validate_data(dict(request))
+
+@app.get("/reload")
+async def reload_engine():
+    rulent.load_rules()
+    return {
+		"status":  "success",
+		"message": "Conditions reloaded successfully",
+	}
+```
+
+Make sure you have a folder called "events" with atleast one YAML file like the below example:
+
+```Yaml
+events:
+  click:
+    rules-operator: "and"
+    rules:
+      - rule: "Name Check"
+        conditions:
+          - "person.name": "James"
+      - rule: "Age Check"
+        conditions:
+          - "person.age": "42"
+```
+
+- You can programatically create this folder and sample file using __rulent.init()__. This needs to be used only once.
+
 ### Key Components
 
 The main components of the event engine are as below.
@@ -21,6 +64,8 @@ These are the rules that need to be applied on the JSON payload. This has suppor
 A sample rules block:
 
 ```yaml
+events:
+  click:
     rules-operator: "and"
     rules:
       - rule: "Name Check"
@@ -28,8 +73,7 @@ A sample rules block:
           - "person.name": "James"
       - rule: "Age Check"
         conditions:
-          - "person.age": ">42"
-          - "person.age": "!43"
+          - "person.age": "42"
 ```
 
 #### Outcomes
@@ -42,3 +86,5 @@ Note: Actions are executed asynchronously.
 #### Actions 
 
 Actions that are part of outcomes can be extended by navigating to the logic folder and actions.go file. Currently, this has access to outcomes and the payloads that were received.
+
+
